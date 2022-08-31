@@ -28,7 +28,7 @@ public class ApostadorControllerTest {
 
     @BeforeEach
     void setup() {
-        apostadorIn = new ApostadorIn("mari", "mari@gmail.com");
+        apostadorIn = new ApostadorIn("Mari", "mari@gmail.com");
     }
 
     @Test
