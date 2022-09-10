@@ -3,6 +3,7 @@ package com.codex.aposta;
 import com.codex.aposta.controller.ApostaController;
 import com.codex.aposta.model.dto.ApostaIn;
 import com.codex.aposta.model.dto.ApostaOut;
+import com.codex.aposta.model.dto.ApostasOut;
 import com.codex.aposta.service.ApostaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -24,15 +27,17 @@ public class ApostaControllerTest {
 
     @Mock
     private ApostaService apostaService;
-
     private ApostaIn apostaIn;
-
     private ApostaOut apostaOut;
+    private ResponseEntity<ApostaOut> respostaApostaSucesso;
+    private List<ApostasOut> listaApostaOut;
 
     @BeforeEach
     void setup() {
         apostaIn = new ApostaIn(1L);
         apostaOut = new ApostaOut("123456", "Mari", "mari@gmail.com");
+        ResponseEntity.status(CREATED).body(apostaOut);
+        listaApostaOut = List.of(new ApostasOut("123456", 1L));
     }
 
     @Test
@@ -41,5 +46,12 @@ public class ApostaControllerTest {
         var response = assertDoesNotThrow(() -> apostaController.salvarAposta(apostaIn));
         assertNotNull(response);
         assertEquals(ResponseEntity.status(CREATED).body(apostaOut), response);
+    }
+
+    @Test
+    void deveRetornarApostaPorId() {
+        when(apostaService.buscarApostasPorIdApostador(1L)).thenReturn(listaApostaOut);
+        var response = assertDoesNotThrow(() -> apostaController.buscarApostasPorIdApostador(1L));
+        assertNotNull(response);
     }
 }
